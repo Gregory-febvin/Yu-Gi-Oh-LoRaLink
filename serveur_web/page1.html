@@ -1,10 +1,122 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Page 1</title>
+  <title>Yu-Gi-Oh! LoRaLink</title>
+  <link rel="stylesheet" href="style.css">
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <style>
+    body {
+    margin: 0;
+    padding-bottom: 3rem;
+    font-family: 'Poppins', sans-serif;
+    }
+
+    .login {
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    form {
+        background-color: #fff;
+        border-radius: 10px;
+        min-width: 300px;
+        padding: 40px 60px;
+    }
+
+    form h1 {
+        color: #412116;
+        text-align: center;
+    }
+
+    form .inputs {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form .inputs input[type='text'],
+    input[type='password'] {
+        padding: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #f2f2f2;
+        outline: none;
+        margin-bottom: 15px;
+    }
+
+    form a.changement_page {
+        font-size: 14px;
+        margin-bottom: 20px;
+        color: #878787;
+        text-align: center;
+        display: block;
+    }
+
+    form button {
+        padding: 15px 25px;
+        border-radius: 5px;
+        border: none;
+        font-size: 15px;
+        color: #fff;
+        background-color: #412116;
+        outline: none;
+        cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Page 1</h1>
-    <a href="/page2">Aller à la page 2</a>
+
+  <section class="login">
+    <form id="Connexion" method="POST">
+
+      <h1>Se connecter</h1>
+
+      <div class="inputs">
+        <input type="text" id="usernameConnexion" name="usernameConnexion" placeholder="Pseudo" />
+        <input type="password" id="passwordConnexion" name="passwordConnexion" placeholder="Mot de passe">
+      </div>
+
+      <div align="center">
+        <a class="changement_page" href="#" onclick="toggleForms()">Je n'ai pas de compte.</a>
+        <button type="submit" onclick="connexion()" name="connexion">Se connecter</button>
+      </div>
+
+    </form>
+
+    <form id="Inscription" method="POST" style="display:none;">
+
+      <h1>S'inscrire</h1>
+
+      <div class="inputs">
+        <!-- Your registration form inputs go here -->
+        <input type="text" id="usernameInscription" name="usernameInscription" placeholder="Pseudo" />
+        <input type="password" id="passwordInscription" name="passwordInscription" placeholder="Mot de passe">
+      </div>
+
+      <div align="center">
+        <a class="changement_page" href="#" onclick="toggleForms()">J'ai déjà un compte.</a>
+        <button type="submit" onclick="inscription()" name="inscription">S'inscrire</button>
+      </div>
+
+    </form>
+  </section>
+
+  <script>
+    function toggleForms() {
+      var loginForm = document.getElementById("Connexion");
+      var registerForm = document.getElementById("Inscription");
+
+      if (loginForm.style.display === "none") {
+        loginForm.style.display = "block";
+        registerForm.style.display = "none";
+      } else {
+        loginForm.style.display = "none";
+        registerForm.style.display = "block";
+      }
+    }
+  </script>
+
 </body>
 </html>
