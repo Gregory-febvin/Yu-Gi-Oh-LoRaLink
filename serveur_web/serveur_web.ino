@@ -1,60 +1,60 @@
-#include <WiFi.h>
-#include <WebServer.h>
-#include <SPIFFS.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <FS.h>  // Include the SPIFFS library
 
-const char* ssid = "VotreSSID";
-const char* password = "VotreMotDePasse";
+const char* ssid = "Yu-Gi-Oh! LoRaLink";     // Name of the access point
+const char* password = "Nice-Cock";  // Password for the access point
 
-WebServer server(80);
-
-void handleRoot() {
-  // Charge le contenu de la première page à partir du fichier HTML
-  File file = SPIFFS.open("/page1.html", "r");
-  if (!file) {
-    Serial.println("Erreur lors de l'ouverture du fichier page1.html");
-    return;
-  }
-  server.streamFile(file, "text/html");
-  file.close();
-}
-
-void handlePage2() {
-  // Charge le contenu de la deuxième page à partir du fichier HTML
-  File file = SPIFFS.open("/page2.html", "r");
-  if (!file) {
-    Serial.println("Erreur lors de l'ouverture du fichier page2.html");
-    return;
-  }
-  server.streamFile(file, "text/html");
-  file.close();
-}
+ESP8266WebServer server(80); // Create a webserver object that listens on port 80
 
 void setup() {
   Serial.begin(115200);
+  delay(100);
 
-  // Connexion au réseau WiFi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connexion au WiFi en cours...");
-  }
-  Serial.println("Connecté au WiFi");
+  // Initialize the access point
+  WiFi.softAP(ssid, password);
 
-  // Initialisation du système de fichiers SPIFFS
-  if (!SPIFFS.begin(true)) {
-    Serial.println("Erreur d'initialisation du SPIFFS");
+  // Print IP address of the access point
+  Serial.println();
+  Serial.print("Access Point IP address: ");
+  Serial.println(WiFi.softAPIP());
+
+  // Mount SPIFFS filesystem
+  if (!SPIFFS.begin()) {
+    Serial.println("Failed to mount file system");
     return;
   }
 
-  // Définition des gestionnaires d'URL
-  server.on("/", handleRoot);
-  server.on("/page2", handlePage2);
+  // List files in SPIFFS (for debugging)
+  Dir dir = SPIFFS.openDir("/");
+  while (dir.next()) {
+    Serial.print("FILE: ");
+    Serial.println(dir.fileName());
+  }
 
-  // Démarrage du serveur
+  // Route for root / web page
+  server.on("/", HTTP_GET, handleRoot);
+
+  // Start the server
   server.begin();
-  Serial.println("Serveur démarré");
 }
 
 void loop() {
-  server.handleClient();
+  server.handleClient(); // Handle client requests
+}
+
+// Handle root / web page
+void handleRoot() {
+  // Open the index.html file
+  File file = SPIFFS.open("/index.html", "r");
+  if (!file) {
+    Serial.println("Failed to open file");
+    return;
+  }
+
+  // Set content type
+  server.streamFile(file, "text/html");
+
+  // Close the file
+  file.close();
 }
