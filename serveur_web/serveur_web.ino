@@ -32,8 +32,8 @@ void setup() {
     Serial.println(dir.fileName());
   }
 
-  // Route for root / web page
   server.on("/", HTTP_GET, handleRoot);
+  server.on("/login", HTTP_POST, handleLogin);
 
   // Start the server
   server.begin();
@@ -43,18 +43,23 @@ void loop() {
   server.handleClient(); // Handle client requests
 }
 
-// Handle root / web page
 void handleRoot() {
-  // Open the index.html file
   File file = SPIFFS.open("/index.html", "r");
   if (!file) {
     Serial.println("Failed to open file");
     return;
   }
 
-  // Set content type
   server.streamFile(file, "text/html");
-
-  // Close the file
   file.close();
+}
+
+void handleLogin() {
+  String username = server.arg("usernameConnexion");
+  String password = server.arg("passwordConnexion");
+
+  Serial.println("Username: " + username);
+  Serial.println("Password: " + password);
+
+  server.send(200, "text/html", "Form submitted successfully!");
 }
